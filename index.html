@@ -21,7 +21,8 @@
         <label>Edad</label>
         <input type="number" v-model="persona.edad"></input>
       </div>
-     <button @click="guardar()">GUARDAR</button>
+     <button v-if="!edicion" @click="guardar()">GUARDAR</button>
+     <button v-if="edicion" @click="editar()">EDITAR</button>
      
      <table border="1">
        <thead>
@@ -34,7 +35,8 @@
           <td>{{data.nombre}}</td>
           <td>{{data.apellido}}</td>
           <td>{{data.edad}}</td>
-          <td><button @click="borrar(index)">Borrar</button></td>
+          <td><button @click="borrar(index)">Borrar</button> 
+            <button @click="editando()">Editar</button></td>
        </tr>
      </table>
      
@@ -53,7 +55,8 @@
            nombre : '',
            apellido : '',
            edad : 0
-        }
+        },
+        edicion : false
       }
     },
     methods: {
@@ -72,6 +75,12 @@
 
       borrar(pos){
         this.personas.splice(pos,1)
+      },
+      editando(){
+        this.edicion = true
+      },
+      editar(){
+        this.edicion = false
       }
     },
    }).mount('#app')
