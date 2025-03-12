@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+      <h1 class="texto">CAPTURA DE DATOS</h1>
+      <div>
+        <label>Nombre</label>
+        <input ref="nombre" type="text" v-model="persona.nombre"></input>
+      </div>
+      <div>
+        <label>Apellido</label>
+        <input type="text" v-model="persona.apellido"></input>
+      </div>
+      <div>
+        <label>Edad</label>
+        <input type="number" v-model="persona.edad"></input>
+      </div>
+     <button @click="guardar()">GUARDAR</button>
+     
+     <table border="1">
+       <thead>
+         <th>NOMBRE</th>
+         <th>APELLIDO</th>
+         <th>EDAD</th>
+         <th>ACCION</th>
+       </thead>
+       <tr v-for="(data,index) in personas">
+          <td>{{data.nombre}}</td>
+          <td>{{data.apellido}}</td>
+          <td>{{data.edad}}</td>
+          <td><button @click="borrar(index)">Borrar</button></td>
+       </tr>
+     </table>
+     
+     
+    </div>
+      
+
+    <script src="vue.js"></script>
+<script>
+  const { createApp } = Vue
+   createApp({
+     data() {
+      return {
+        personas : [],
+        persona : {
+           nombre : '',
+           apellido : '',
+           edad : 0
+        }
+      }
+    },
+    methods: {
+      guardar(){
+        let obj = {... this.persona}
+        this.personas.push(obj)
+        this.limpiar()
+      },
+
+      limpiar(){
+        this.persona.nombre = ''
+        this.persona.apellido = ''
+        this.persona.edad = 0
+        this.$refs['nombre'].focus()
+      },
+
+      borrar(pos){
+        this.personas.splice(pos,1)
+      }
+    },
+   }).mount('#app')
+</script>
+</body>
+</html>
