@@ -1,89 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://unpkg.com/vue@3"></script>
+    <title>Gestión de Datos</title>
 </head>
 <body>
     <div id="app">
-      <h1 class="texto">CAPTURA DE DATOS</h1>
+      <h1>Gestión de Datos</h1>
       <div>
         <label>Nombre</label>
-        <input ref="nombre" type="text" v-model="persona.nombre"></input>
+        <input type="text" v-model="persona.nombre">
       </div>
       <div>
         <label>Apellido</label>
-        <input type="text" v-model="persona.apellido"></input>
+        <input type="text" v-model="persona.apellido">
       </div>
       <div>
         <label>Edad</label>
-        <input type="number" v-model="persona.edad"></input>
+        <input type="number" v-model="persona.edad" min="0">
       </div>
-     <button v-if="!edicion" @click="guardar()">GUARDAR</button>
-     <button v-if="edicion" @click="editar()">EDITAR</button>
      
-     <table border="1">
+      <button :disabled="!camposValidos" @click="edicion ? actualizar() : guardar()" 
+              :class="edicion ? 'edit-btn' : 'save-btn'">
+        <i :class="edicion ? 'fas fa-edit' : 'fas fa-save'"></i> {{ edicion ? 'EDITAR' : 'GUARDAR' }}
+      </button>
+      <button v-if="personas.length" @click="limpiarLista()" class="clear-btn">
+        <i class="fas fa-trash"></i> Limpiar Todo
+      </button>
+
+      <table v-if="personas.length">
        <thead>
-         <th>NOMBRE</th>
-         <th>APELLIDO</th>
-         <th>EDAD</th>
-         <th>ACCION</th>
+         <tr>
+           <th @click="ordenar('nombre')">NOMBRE</th>
+           <th @click="ordenar('apellido')">APELLIDO</th>
+           <th @click="ordenar('edad')">EDAD</th>
+           <th>ACCIÓN</th>
+         </tr>
        </thead>
-       <tr v-for="(data,index) in personas">
-          <td>{{data.nombre}}</td>
-          <td>{{data.apellido}}</td>
-          <td>{{data.edad}}</td>
-          <td><button @click="borrar(index)">Borrar</button> 
-            <button @click="editando()">Editar</button></td>
-       </tr>
+       <tbody>
+         <tr v-for="(data, index) in personas" :key="index">
+            <td>{{ data.nombre }}</td>
+            <td>{{ data.apellido }}</td>
+            <td>{{ data.edad }}</td>
+            <td>
+              <button class="delete-btn" @click="borrar(index)"><i class="fas fa-trash"></i></button>
+              <button class="edit-btn" @click="cargarDatos(index)"><i class="fas fa-edit"></i></button>
+            </td>
+         </tr>
+       </tbody>
      </table>
-     
-     
     </div>
-      
-
-    <script src="vue.js"></script>
-<script>
-  const { createApp } = Vue
-   createApp({
-     data() {
-      return {
-        personas : [],
-        persona : {
-           nombre : '',
-           apellido : '',
-           edad : 0
-        },
-        edicion : false
-      }
-    },
-    methods: {
-      guardar(){
-        let obj = {... this.persona}
-        this.personas.push(obj)
-        this.limpiar()
-      },
-
-      limpiar(){
-        this.persona.nombre = ''
-        this.persona.apellido = ''
-        this.persona.edad = 0
-        this.$refs['nombre'].focus()
-      },
-
-      borrar(pos){
-        this.personas.splice(pos,1)
-      },
-      editando(){
-        this.edicion = true
-      },
-      editar(){
-        this.edicion = false
-      }
-    },
-   }).mount('#app')
-</script>
+    
+    <script src="codigo.js"></script>
 </body>
 </html>
